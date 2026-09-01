@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>প্রোডাক্ট ডিটেইলস - Keshtaru</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
         .navbar-custom { background-color: #2c4c3b; }
         .brand-logo { height: 65px; object-fit: contain; }
@@ -12,6 +14,26 @@
         .related-product-img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; background-color: #fff; padding: 10px;}
         .product-card { transition: 0.3s; overflow: hidden; }
         .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
+        
+        /* Review Slider CSS */
+        .review-slider { display: flex; overflow-x: auto; gap: 15px; padding-bottom: 15px; scroll-behavior: smooth; }
+        .review-slider::-webkit-scrollbar { height: 8px; }
+        .review-slider::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        .review-slider::-webkit-scrollbar-thumb { background: #2c4c3b; border-radius: 4px; }
+        .review-img { height: 300px; width: auto; object-fit: contain; border-radius: 8px; border: 1px solid #ddd; cursor: pointer; transition: 0.3s; }
+        .review-img:hover { transform: scale(1.02); }
+
+        /*new 2nd time */
+        /* কাস্টমার রিভিউ টগল বাটন ও থাম্বনেইল */
+        .review-toggle-btn { background-color: #f8f9fa; color: #2c4c3b; border: 1px solid #2c4c3b; padding: 10px 15px; border-radius: 5px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: bold; transition: 0.3s; margin-top: 15px; }
+        .review-toggle-btn:hover { background-color: #2c4c3b; color: #fff; }
+        .review-slider-wrapper { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; }
+        .review-thumb { height: 70px; width: 70px; object-fit: cover; border-radius: 8px; cursor: pointer; border: 2px solid transparent; transition: 0.3s; }
+        .review-thumb:hover { border-color: #2c4c3b; transform: scale(1.05); }
+        
+        /* লাইটবক্স গ্যালারি (পপ-আপ) */
+        .lightbox-img { max-height: 80vh; width: auto; margin: 0 auto; object-fit: contain; border-radius: 8px; }
+    
     </style>
 </head>
 <body>
@@ -37,10 +59,25 @@
     <!-- Product Details Section -->
     <div class="container py-5 mb-4">
         <div class="row align-items-center">
-            <!-- Product Image -->
+            
+            <!-- Product Image & Review Section -->
             <div class="col-md-6 mb-4 mb-md-0">
                 <img id="main-image" src="" alt="Product Image" class="product-img-main shadow-sm border">
+                
+                <!-- Customer Review Dropdown (ছবির ঠিক নিচে আনা হয়েছে) -->
+                <div id="review-section" style="display: none;" class="mt-3">
+                    <div class="review-toggle-btn w-100" data-bs-toggle="collapse" data-bs-target="#reviewCollapse">
+                        <span id="review-count-text">Customer Review (0)</span>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="collapse mt-2" id="reviewCollapse">
+                        <div id="review-thumbnails" class="review-slider-wrapper">
+                            <!-- জাভাস্ক্রিপ্ট এখানে ছোট ছবিগুলো বসাবে -->
+                        </div>
+                    </div>
+                </div>
             </div>
+
             <!-- Product Details -->
             <div class="col-md-6 ps-md-5">
                 <h2 id="main-title" class="fw-bold mb-3">লোডিং হচ্ছে...</h2>
@@ -61,6 +98,7 @@
         </div>
     </div>
 
+
     <!-- Dynamic "You Can Also Buy" Section -->
     <div class="bg-light py-5">
         <div class="container">
@@ -75,30 +113,212 @@
     <!-- Footer -->
     <footer class="text-white py-4 text-center" style="background-color: #1f3629;">
         <div class="container">
-            <p class="mb-0">© 2026 Keshtaru | সকল অধিকার সংরক্ষিত</p>
+            <p class="mb-2 fs-5">© 2026 Keshtaru | সকল অধিকার সংরক্ষিত</p>
+            
+            <!-- সোশ্যাল মিডিয়া আইকন ও লিংক -->
+            <div class="d-flex justify-content-center gap-4 mt-3">
+                <a href="https://www.facebook.com/profile.php?id=61591005358430" target="_blank" class="text-white fs-3 text-decoration-none" title="Facebook">
+                    <i class="bi bi-facebook"></i>
+                </a>
+                <a href="https://www.messenger.com/t/12456632086196879" target="_blank" class="text-white fs-3 text-decoration-none" title="Messenger">
+                    <i class="bi bi-messenger"></i>
+                </a>
+                <a href="https://wa.me/8801325763779" target="_blank" class="text-white fs-3 text-decoration-none" title="WhatsApp">
+                    <i class="bi bi-whatsapp"></i>
+                </a>
+            </div>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     
+    <!-- Lightbox Modal (গ্যালারির জন্য) -->
+    <div class="modal fade" id="reviewLightbox" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content bg-transparent border-0">
+                <div class="modal-header border-0 pb-0">
+                    <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal" aria-label="Close" style="background-color: white;"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div id="reviewCarousel" class="carousel slide" data-bs-ride="false">
+                        <div class="carousel-inner" id="carousel-inner-content">
+                            <!-- ক্যারোসেল আইটেম এখানে আসবে -->
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#reviewCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#reviewCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- সম্পূর্ণ ডাটাবেস এবং ফাংশনালিটি -->
     <script>
         const productsDB = {
-            "wide-comb": { name: "Sandalwood Extra Wide Teeth Comb", price: "৳ ৩৫০", image: "image/Comb/Sandalwood extra wide teeth comb.jpg", description: "বড় দাঁতের এই চন্দন কাঠের চিরুনি চুলের জট ছাড়াতে এবং চুল পড়া কমাতে দারুণ কার্যকরী।" },
-            "narrow-comb": { name: "Sandalwood Narrow Teeth Comb", price: "৳ ৩২০", image: "image/Comb/Sandalwood narrow teeth comb.jpg", description: "নরমাল চুল সাজানোর জন্য ১০০% আসল চন্দন কাঠের চিকন দাঁতের চিরুনি।" },
-            "peach-comb": { name: "Peach Wood Comb", price: "৳ ২৫০", image: "image/Comb/Peach wood (1).jpg", description: "পিচ কাঠের তৈরি এই চিরুনি স্ক্যাল্পের স্বাস্থ্য ভালো রাখে এবং চুল মসৃণ করে।" },
-            "peach-comb-1": { name: "Peach Wood Comb 1", price: "৳ 3৫০", image: "image/Comb/Peach wood (2).jpg", description: "পিচ কাঠের তৈরি এই চিরুনি স্ক্যাল্পের স্বাস্থ্য ভালো রাখে এবং চুল মসৃণ করে।" },
-            "peach-comb-2": { name: "Peach Wood Comb 2", price: "৳ ৫০", image: "image/Comb/Peach wood (3).jpg", description: "পিচ কাঠের তৈরি এই চিরুনি স্ক্যাল্পের স্বাস্থ্য ভালো রাখে এবং চুল মসৃণ করে।" },
-            "peach-comb-3": { name: "Peach Wood Comb 3", price: "৳ 1৫০", image: "image/Comb/Peach wood (4).jpg", description: "পিচ কাঠের তৈরি এই চিরুনি স্ক্যাল্পের স্বাস্থ্য ভালো রাখে এবং চুল মসৃণ করে।" },
-
-            "magic-oil": { name: "Magic Essence Hair Oil", price: "৳ ৩০০", image: "image/oil/Magic essence hair oil.jpg", description: "চুলকে গোড়া থেকে মজবুত করতে এবং দ্রুত বৃদ্ধিতে সহায়তা করে ম্যাজিক এসেন্স হেয়ার অয়েল।" },
-            "root-oil": { name: "Root Care Herbal Essence Hair Oil", price: "৳ ৩২০", image: "image/oil/Root care herbal essence hair oil.jpg", description: "বিশেষভাবে রুক্ষ ও ড্যামেজ চুলের যত্ন নিতে তৈরি রুট কেয়ার হারবাল হেয়ার অয়েল।" },
-            "silk-oil": { name: "Silk Secret Shine Therapy Hair Oil", price: "৳ ৩৫০", image: "image/oil/Silk secret shine therapy hair oil.jpg", description: "চুলের সিল্কি ভাব ধরে রাখতে এবং ন্যাচারাল সাইন ফিরিয়ে আনতে সিল্ক সিক্রেট অয়েল।" },
             
-            "aloevera-pack": { name: "Aloevera Hair Pack", price: "৳ ২০০", image: "image/hair pack/aloevera hair pack.jpg", description: "অ্যালোভেরার প্রাকৃতিক পুষ্টিতে ভরপুর যা স্ক্যাল্পকে ঠান্ডা রাখে এবং খুশকি দূর করে।" },
-            "beetroot-pack": { name: "Beetroot Hair Pack", price: "৳ ২০০", image: "image/hair pack/beetroot hair pack.jpg", description: "বিটরুটের নির্যাস যুক্ত যা চুলে প্রাকৃতিক লালচে আভা আনে এবং পুষ্টি জোগায়।" },
-            "chlorophyll-pack": { name: "Chlorophyll Hair Pack", price: "৳ ২২০", image: "image/hair pack/chlorophyll hair pack.jpg", description: "ক্লোরোফিলের শক্তি দিয়ে চুলের গোড়া শক্ত করে এবং অকালে চুল পাকা রোধ করে।" },
-            "mehedi-pack": { name: "Mehedi Hair Pack", price: "৳ ১৫০", image: "image/hair pack/mehedi hair pack.jpg", description: "১০০% খাঁটি মেহেদী পাতার গুঁড়ো, যা চুলে চমৎকার রং এবং সিল্কি ভাব নিয়ে আসে।" }
+            //display product id
+            "900 taka": { 
+                name: "combo", 
+                price: "৳ 900", 
+                image: "image/display/1.jpg", 
+                description: "বড় দাঁতের এই চন্দন কাঠের চিরুনি চুলের জট ছাড়াতে এবং চুল পড়া কমাতে দারুণ কার্যকরী।" },
+                
+
+            //oil product id
+            
+            "wide-comb": { 
+                name: "Sandalwood Extra Wide Teeth Comb", 
+                price: "৳ ৩৫০", 
+                image: "image/Comb/Sandalwood extra wide teeth comb.jpg", 
+                description: "বড় দাঁতের এই চন্দন কাঠের চিরুনি চুলের জট ছাড়াতে এবং চুল পড়া কমাতে দারুণ কার্যকরী।",
+                reviews: [
+                    "image/Comb/review/rvw1.png",
+                    "image/Comb/review/rvw2.png",
+                    "image/Comb/review/rvw3.png",
+                    "image/Comb/review/rvw4.png",
+                    "image/Comb/review/rvw5.png",
+                    "image/Comb/review/rvw6.png",
+                    "image/Comb/review/rvw7.png",
+                    "image/Comb/review/rvw8.png",
+                    "image/Comb/review/rvw9.png",
+                    "image/Comb/review/rvw10.png"
+                 ] },
+            "narrow-comb": { 
+                name: "Sandalwood Narrow Teeth Comb", 
+                price: "৳ ৩২০", 
+                image: "image/Comb/Sandalwood narrow teeth comb.jpg", 
+                description: "নরমাল চুল সাজানোর জন্য ১০০% আসল চন্দন কাঠের চিকন দাঁতের চিরুনি।",
+                reviews: [
+                    "image/Comb/review/rvw1.png",
+                    "image/Comb/review/rvw2.png",
+                    "image/Comb/review/rvw3.png",
+                    "image/Comb/review/rvw4.png",
+                    "image/Comb/review/rvw5.png",
+                    "image/Comb/review/rvw6.png",
+                    "image/Comb/review/rvw7.png",
+                    "image/Comb/review/rvw8.png",
+                    "image/Comb/review/rvw9.png",
+                    "image/Comb/review/rvw10.png"
+                 ] 
+
+                
+             },
+            "peach-comb": { 
+                name: "Peach Wood Comb", 
+                price: "৳ ২৫০", 
+                image: "image/Comb/Peach wood (1).jpg", 
+                description: "পিচ কাঠের তৈরি এই চিরুনি স্ক্যাল্পের স্বাস্থ্য ভালো রাখে এবং চুল মসৃণ করে।",
+                reviews: [
+                    "image/Comb/review/rvw1.png",
+                    "image/Comb/review/rvw2.png",
+                    "image/Comb/review/rvw3.png",
+                    "image/Comb/review/rvw4.png",
+                    "image/Comb/review/rvw5.png",
+                    "image/Comb/review/rvw6.png",
+                    "image/Comb/review/rvw7.png",
+                    "image/Comb/review/rvw8.png",
+                    "image/Comb/review/rvw9.png",
+                    "image/Comb/review/rvw10.png"
+                 ] 
+                },
+            "peach-comb-1": { 
+                name: "Peach Wood Comb 1", 
+                price: "৳ 3৫০", 
+                image: "image/Comb/Peach wood (2).jpg", 
+                description: "পিচ কাঠের তৈরি এই চিরুনি স্ক্যাল্পের স্বাস্থ্য ভালো রাখে এবং চুল মসৃণ করে।",
+                reviews: [
+                    "image/Comb/review/rvw1.png",
+                    "image/Comb/review/rvw2.png",
+                    "image/Comb/review/rvw3.png",
+                    "image/Comb/review/rvw4.png",
+                    "image/Comb/review/rvw5.png",
+                    "image/Comb/review/rvw6.png",
+                    "image/Comb/review/rvw7.png",
+                    "image/Comb/review/rvw8.png",
+                    "image/Comb/review/rvw9.png",
+                    "image/Comb/review/rvw10.png"
+                 ]
+                 },
+            "peach-comb-2": { 
+                name: "Peach Wood Comb 2", 
+                price: "৳ ৫০", 
+                image: "image/Comb/Peach wood (3).jpg", 
+                description: "পিচ কাঠের তৈরি এই চিরুনি স্ক্যাল্পের স্বাস্থ্য ভালো রাখে এবং চুল মসৃণ করে।",
+                reviews: [
+                    "image/Comb/review/rvw1.png",
+                    "image/Comb/review/rvw2.png",
+                    "image/Comb/review/rvw3.png",
+                    "image/Comb/review/rvw4.png",
+                    "image/Comb/review/rvw5.png",
+                    "image/Comb/review/rvw6.png",
+                    "image/Comb/review/rvw7.png",
+                    "image/Comb/review/rvw8.png",
+                    "image/Comb/review/rvw9.png",
+                    "image/Comb/review/rvw10.png"
+                 ]},
+            "peach-comb-3": { 
+                name: "Peach Wood Comb 3", 
+                price: "৳ 1৫০",     
+                image: "image/Comb/Peach wood (4).jpg", 
+                description: "পিচ কাঠের তৈরি এই চিরুনি স্ক্যাল্পের স্বাস্থ্য ভালো রাখে এবং চুল মসৃণ করে।" ,
+                reviews: [
+                    "image/Comb/review/rvw1.png",
+                    "image/Comb/review/rvw2.png",
+                    "image/Comb/review/rvw3.png",
+                    "image/Comb/review/rvw4.png",
+                    "image/Comb/review/rvw5.png",
+                    "image/Comb/review/rvw6.png",
+                    "image/Comb/review/rvw7.png",
+                    "image/Comb/review/rvw8.png",
+                    "image/Comb/review/rvw9.png",
+                    "image/Comb/review/rvw10.png"
+                 ]
+                },
+
+            "magic-oil": { 
+                name: "Magic Essence Hair Oil", 
+                price: "৳ ৩০০", 
+                image: "image/oil/Magic essence hair oil.jpg", 
+                    description: "চুলকে গোড়া থেকে মজবুত করতে এবং দ্রুত বৃদ্ধিতে সহায়তা করে ম্যাজিক এসেন্স হেয়ার অয়েল।" },
+            "root-oil": { 
+                name: "Root Care Herbal Essence Hair Oil", 
+                price: "৳ ৩২০", 
+                image: "image/oil/Root care herbal essence hair oil.jpg", 
+                description: "বিশেষভাবে রুক্ষ ও ড্যামেজ চুলের যত্ন নিতে তৈরি রুট কেয়ার হারবাল হেয়ার অয়েল।" },
+            "silk-oil": { 
+                name: "Silk Secret Shine Therapy Hair Oil", 
+                price: "৳ ৩৫০", 
+                image: "image/oil/Silk secret shine therapy hair oil.jpg", 
+                description: "চুলের সিল্কি ভাব ধরে রাখতে এবং ন্যাচারাল সাইন ফিরিয়ে আনতে সিল্ক সিক্রেট অয়েল।" },
+            
+            // hair pack id
+
+            "aloevera-pack": { 
+                name: "Aloevera Hair Pack", 
+                price: "৳ ২০০", 
+                image: "image/hair pack/aloevera hair pack.jpg", 
+                description: "অ্যালোভেরার প্রাকৃতিক পুষ্টিতে ভরপুর যা স্ক্যাল্পকে ঠান্ডা রাখে এবং খুশকি দূর করে।" },
+            "beetroot-pack": { 
+                name: "Beetroot Hair Pack", 
+                price: "৳ ২০০", 
+                image: "image/hair pack/beetroot hair pack.jpg", 
+                description: "বিটরুটের নির্যাস যুক্ত যা চুলে প্রাকৃতিক লালচে আভা আনে এবং পুষ্টি জোগায়।" },
+            "chlorophyll-pack": { 
+                name: "Chlorophyll Hair Pack", 
+                price: "৳ ২২০", 
+                image: "image/hair pack/chlorophyll hair pack.jpg", 
+                description: "ক্লোরোফিলের শক্তি দিয়ে চুলের গোড়া শক্ত করে এবং অকালে চুল পাকা রোধ করে।" },
+            "mehedi-pack": { 
+                name: "Mehedi Hair Pack", 
+                price: "৳ ১৫০", 
+                image: "image/hair pack/mehedi hair pack.jpg", 
+                description: "১০০% খাঁটি মেহেদী পাতার গুঁড়ো, যা চুলে চমৎকার রং এবং সিল্কি ভাব নিয়ে আসে।" }
              
         };
 
@@ -126,22 +346,57 @@
                 let currentUrl = window.location.href; 
                 
                 // অ্যাসথেটিক মেসেজ ফরম্যাট
-                let message = `হ্যালো *Keshtaru*! 🌿
-আমি আপনাদের ওয়েবসাইট থেকে একটি প্রোডাক্ট অর্ডার করতে চাই।
+                
+                let message = 
+                
+                `হ্যালো *Keshtaru*! 🌿
+                আমি আপনাদের ওয়েবসাইট থেকে একটি প্রোডাক্ট অর্ডার করতে চাই।
 
-🛍️ *প্রোডাক্ট:* ${product.name}
-💵 *মূল্য:* ${product.price}
-📦 *পরিমাণ:* ${qty} টি
+                🛍️ *প্রোডাক্ট:* ${product.name}
+                💵 *মূল্য:* ${product.price}
+                📦 *পরিমাণ:* ${qty} টি
 
-🔗 *প্রোডাক্ট লিংক:* ${currentUrl}
+                🔗 *প্রোডাক্ট লিংক:* ${currentUrl}
 
-দয়া করে অর্ডারটি কনফার্ম করুন এবং ডেলিভারি প্রসেসটি জানাবেন। ধন্যবাদ! ✨`;
+                দয়া করে অর্ডারটি কনফার্ম করুন এবং ডেলিভারি প্রসেসটি জানাবেন। ধন্যবাদ! ✨`;
 
                 // হোয়াটসঅ্যাপের লিংক তৈরি করে নতুন ট্যাবে ওপেন করা
                 let waLink = "https://wa.me/" + whatsappNumber + "?text=" + encodeURIComponent(message);
                 window.open(waLink, '_blank');
             });
 
+            // রিভিউ সেকশন ও গ্যালারি ডায়নামিক করা
+            const reviewSection = document.getElementById('review-section');
+            const reviewCountText = document.getElementById('review-count-text');
+            const reviewThumbnails = document.getElementById('review-thumbnails');
+            const carouselInner = document.getElementById('carousel-inner-content');
+            
+            if (product.reviews && product.reviews.length > 0) {
+                reviewSection.style.display = "block";
+                reviewCountText.textContent = `Customer Review (${product.reviews.length}টি)`;
+                reviewThumbnails.innerHTML = "";
+                carouselInner.innerHTML = "";
+                
+                product.reviews.forEach((imgSrc, index) => {
+                    // ছোট থাম্বনেইল (ক্লিক করলে পপ-আপ ওপেন হবে এবং নির্দিষ্ট স্লাইডে যাবে)
+                    reviewThumbnails.innerHTML += `
+                        <img src="${imgSrc}" class="review-thumb shadow-sm" alt="Review" 
+                             data-bs-toggle="modal" data-bs-target="#reviewLightbox" 
+                             onclick="goToSlide(${index})">
+                    `;
+                    
+                    // ফুলস্ক্রিন গ্যালারির ছবি
+                    let activeClass = index === 0 ? "active" : "";
+                    carouselInner.innerHTML += `
+                        <div class="carousel-item ${activeClass}">
+                            <img src="${imgSrc}" class="d-block w-100 lightbox-img" alt="Review">
+                        </div>
+                    `;
+                });
+            } else {
+                reviewSection.style.display = "none";
+            }
+            
             // ডায়নামিক 'You can also buy' সেকশন তৈরি করা
             const suggestionContainer = document.getElementById('suggestion-container');
             let allKeys = Object.keys(productsDB);
@@ -174,6 +429,12 @@
             document.getElementById('main-title').textContent = "প্রোডাক্ট পাওয়া যায়নি!";
             document.getElementById('main-desc').textContent = "আপনি যে প্রোডাক্টটি খুঁজছেন তা হয়তো রিমুভ করা হয়েছে অথবা লিংকটি ভুল। দয়া করে হোম পেজে ফিরে যান।";
             document.getElementById('order-btn').style.display = "none";
+        }
+    // লাইটবক্সে ক্লিক করা ছবিতে যাওয়ার ফাংশন
+        function goToSlide(index) {
+            const carouselElement = document.getElementById('reviewCarousel');
+            const carousel = bootstrap.Carousel.getOrCreateInstance(carouselElement);
+            carousel.to(index);
         }
     </script>
 </body>
