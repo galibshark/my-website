@@ -236,29 +236,55 @@
                 isValid = false;
             }
 
-            // যদি সব তথ্য সঠিক থাকে, তবেই হোয়াটসঅ্যাপে মেসেজ পাঠাবে
+            // যদি সব তথ্য সঠিক থাকে, তবেই ডেটাবেসে (Google Sheet) পাঠাবে
             if(isValid) {
-                let whatsappNumber = "8801325763779"; // আপনার নম্বর
                 
-                // সুন্দর করে সাজানো হোয়াটসঅ্যাপ মেসেজ
-                let message = `*নতুন অর্ডার এসেছে!* 🛍️
+                let orderBtn = document.getElementById('place-order-btn');
+                
+                // বাটনটিকে লোডিং স্টেটে নিয়ে যাওয়া
+                orderBtn.innerHTML = "অর্ডার সাবমিট হচ্ছে... ⏳";
+                orderBtn.disabled = true;
 
-👤 *নাম:* ${name}
-📞 *ফোন:* ${phone}
-📧 *ইমেইল:* ${email}
+                // ওয়েবসাইটের বর্তমান লিংক থেকে প্রোডাক্ট পেজের লিংক অটোমেটিক বানানো
+                let baseUrl = window.location.href.split('checkout.html')[0];
+                let productFullUrl = baseUrl + "product-details.html?id=" + productId;
 
-📦 *প্রোডাক্ট:* ${selectedProduct.name}
-🔢 *পরিমাণ:* ${qty} টি
-💰 *সর্বমোট বিল:* ৳ ${totalPrice}
+                // কাস্টমারের ডেটাগুলো একসাথে প্যাক করা
+                let orderData = {
+                    name: name,
+                    phone: phone,
+                    email: email,
+                    address: address,
+                    mapLink: mapLink,
+                    productName: selectedProduct.name,
+                    productUrl: productFullUrl, // <--- এই নতুন লাইনটি যুক্ত করা হলো
+                    qty: qty,
+                    totalPrice: totalPrice
+                };
 
-📍 *ঠিকানা:* ${address}
-🗺️ *ম্যাপ লিংক:* ${mapLink}`;
+                // ★★★ এখানে আপনার গুগল শিটের Apps Script URL-টি বসান ★★★
+                const scriptURL = 'https://script.google.com/macros/s/AKfycbwQKtWN59oVGvANiWCi3ExAGYUfU83aRxsRXh5wlBC6IlJ5jNWhXiNWuoQwmM3LNblkcA/exec';
 
-                // হোয়াটসঅ্যাপ ওপেন করা
-                let waLink = "https://wa.me/" + whatsappNumber + "?text=" + encodeURIComponent(message);
-                window.open(waLink, '_blank');
+                // ফায়ারবেসের মতো ডেটাবেসে ডেটা পাঠানো (Fetch API)
+                fetch(scriptURL, {
+                    method: 'POST',
+                    body: JSON.stringify(orderData),
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+                })
+                .then(response => {
+                    // অর্ডার সফল হলে
+                    alert("ধন্যবাদ! আপনার অর্ডারটি সফলভাবে সম্পন্ন হয়েছে। খুব শীঘ্রই আমাদের প্রতিনিধি আপনার সাথে যোগাযোগ করবে।");
+                    window.location.href = "index.html"; // অর্ডার শেষে হোম পেজে পাঠিয়ে দেওয়া
+                })
+                .catch(error => {
+                    // যদি কোনো টেকনিক্যাল সমস্যা হয়
+                    alert("দুঃখিত, সার্ভারে সমস্যা হচ্ছে। দয়া করে আবার চেষ্টা করুন।");
+                    orderBtn.innerHTML = "[Place Order] - অর্ডার সম্পন্ন করুন";
+                    orderBtn.disabled = false;
+                });
             }
-        });
+            }
+        );
 
     </script>
 </body>
