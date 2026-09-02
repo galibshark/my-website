@@ -24,249 +24,288 @@
         .content-box { background: #fff; border-radius: 10px; padding: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); min-height: 400px; }
         
         /* অর্ডার কার্ড */
-        .order-card { border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+        .order-card { border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px; margin-bottom: 15px; transition: 0.3s; }
+        .order-card:hover { border-color: #2c4c3b; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .status-badge { font-size: 0.85rem; padding: 5px 10px; border-radius: 5px; font-weight: bold; }
-        .status-pending { background-color: #fff3cd; color: #856404; }
+        .status-pending { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+        .status-cancelled { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .status-delivered { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
 
-         
-        /*out product slider */
-
-        html {overflow-y: scroll;}
-        /* স্মুথ স্ক্রল এবং ন্যাভবার যেন কন্টেন্ট ঢেকে না দেয় */
+        /* স্মুথ স্ক্রল এবং ন্যাভবার */
         html {
             scroll-behavior: smooth;
-            scroll-padding-top: 80px; /* স্টিকি ন্যাভবারের জন্য জায়গা ছাড়বে */
+            scroll-padding-top: 80px;
             overflow-y: scroll;
         }
 
-        /* মেইন মেনুর আইটেমগুলোর মাঝখানে গ্যাপ */
-        .navbar-nav .nav-item {
-            margin-right: 25px; 
-        }
+        .navbar-nav .nav-item { margin-right: 25px; }
 
-        /* Hover Dropdown Effect (শুধু ডেক্সটপের জন্য) */
         @media all and (min-width: 992px) {
             .navbar .nav-item.dropdown:hover .dropdown-menu {
-                display: block;
-                margin-top: 0;
-                transition: 0.3s;
+                display: block; margin-top: 0; transition: 0.3s;
             }
         }
         
-        /* মোবাইল মেনুর (Offcanvas) ভেতরের লিংকগুলোর কালার ঠিক রাখতে */
         .offcanvas-custom { background-color: #2c4c3b; }
 
-        /* ড্রপডাউন মেনুর প্রিমিয়াম ডিজাইন (সবুজ থিম এবং লাইন সেপারেটর) */
         .custom-dropdown {
-            background-color: #2c4c3b;
-            border: 1px solid #1f3629;
-            border-radius: 8px;
-            padding: 0;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            overflow: hidden;
+            background-color: #2c4c3b; border: 1px solid #1f3629; border-radius: 8px; padding: 0; box-shadow: 0 10px 25px rgba(0,0,0,0.2); overflow: hidden;
         }
         .custom-dropdown .dropdown-item {
-            color: #e9ecef;
-            padding: 12px 20px;
-            font-weight: 500;
-            border-bottom: 1px solid rgba(255,255,255,0.1); /* সেপারেটর লাইন */
-            transition: 0.3s;
+            color: #e9ecef; padding: 12px 20px; font-weight: 500; border-bottom: 1px solid rgba(255,255,255,0.1); transition: 0.3s;
         }
-        .custom-dropdown li:last-child .dropdown-item {
-            border-bottom: none; /* শেষের আইটেমে লাইন থাকবে না */
-        }
+        .custom-dropdown li:last-child .dropdown-item { border-bottom: none; }
         .custom-dropdown .dropdown-item:hover {
-            background-color: #1f3629; 
-            color: #ffffff;
-            padding-left: 28px; /* হোভার করলে দারুণভাবে একটু ডানে সরবে */
+            background-color: #1f3629; color: #ffffff; padding-left: 28px; 
         }
     </style>
 </head>
 <body>
 
-    
-      <!-- Navbar -->    <!-- Navbar -->   <!-- Navbar -->   <!-- Navbar -->   <!-- Navbar -->    <!-- Navbar -->    <!-- Navbar -->   <!-- Navbar -->
-
-
+<!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top shadow-sm py-0" style="min-height: 60px;">
     <div class="container-fluid px-3 px-md-4">
-        
-        <!-- Logo -->
         <a class="navbar-brand p-0" href="index.html" style="margin-left: 60px;">
-            <img src="image/logo.png" alt="Keshtaru Logo" class="brand-logo rounded-circle p-1" 
-                 style="width: 90px; height: 90px; object-fit: cover;">
+            <img src="image/logo.png" alt="Keshtaru Logo" class="brand-logo rounded-circle p-1" style="width: 90px; height: 90px; object-fit: cover;">
         </a>
-        
-        <!-- Mobile Toggle Button -->
         <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar">
             <span class="navbar-toggler-icon"></span>
         </button>
-        
-        <!-- Offcanvas Sidebar -->
         <div class="offcanvas offcanvas-end offcanvas-custom" tabindex="-1" id="offcanvasNavbar">
             <div class="offcanvas-header border-bottom border-success">
                 <h5 class="offcanvas-title text-white fw-bold">Keshtaru</h5>
                 <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="offcanvas"></button>
             </div>
-            
             <div class="offcanvas-body">
                 <ul class="navbar-nav ms-auto fw-semibold fs-5 pe-lg-5" style="margin-right: 50px;">
                     <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
-                    
-                    <!-- Products Dropdown (সুন্দর ডিজাইন করা) -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="index.html#products" id="productDropdown" data-bs-toggle="dropdown">
-                            Our Products
-                        </a>
-                        
+                        <a class="nav-link dropdown-toggle" href="index.html#products" id="productDropdown" data-bs-toggle="dropdown">Our Products</a>
                         <ul class="dropdown-menu custom-dropdown" aria-labelledby="productDropdown">
                             <li><a class="dropdown-item" href="index.html#category-comb">চিরুনি (Comb)</a></li>
                             <li><a class="dropdown-item" href="index.html#category-oil">তেল (Oil)</a></li>
                             <li><a class="dropdown-item" href="index.html#category-pack">হেয়ার প্যাক (Hair Pack)</a></li>
                         </ul>
-                    
                     </li>
-                    
                     <li class="nav-item"><a class="nav-link" href="index.html#about">About Us</a></li>
-                    
                     <li class="nav-item">
-                        <a class="nav-link fs-4" href="#" id="profile-btn" style="transition: 0.3s;">
-                            <i class="bi bi-person-circle"></i>
-                        </a>
+                        <a class="nav-link fs-4 text-warning" href="#" id="profile-btn" style="transition: 0.3s;"><i class="bi bi-person-circle"></i></a>
                     </li>
-               
                 </ul>
             </div>
         </div>
-
     </div>
 </nav>
 
-    <!-- ড্যাশবোর্ড সেকশন -->
-    <div class="container py-5">
-        <div class="row">
-            
-            <!-- বাম দিকের সাইডবার মেনু -->
-            <div class="col-md-3 mb-4">
-                <div class="sidebar-menu">
-                    <div class="text-center mb-4 border-bottom pb-3">
-                        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="User" class="rounded-circle mb-2" style="width: 70px;">
-                        <h5 class="fw-bold mb-0" id="user-name">লোড হচ্ছে...</h5>
-                        <p class="text-muted small" id="user-email">...</p>
-                    </div>
-
-                    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                        <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-overview" type="button"><i class="bi bi-grid-fill"></i> ওভারভিউ</button>
-                        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-orders" type="button"><i class="bi bi-box-seam"></i> আমার অর্ডার (Track)</button>
-                        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-billing" type="button"><i class="bi bi-geo-alt-fill"></i> ঠিকানা ও বিলিং</button>
-                        
-                        <button class="nav-link text-danger mt-3 border-top pt-3" id="logout-btn" type="button"><i class="bi bi-box-arrow-right"></i> লগআউট করুন</button>
-                    </div>
+<!-- ড্যাশবোর্ড সেকশন -->
+<div class="container py-5">
+    <div class="row">
+        
+        <!-- সাইডবার -->
+        <div class="col-md-3 mb-4">
+            <div class="sidebar-menu">
+                <div class="text-center mb-4 border-bottom pb-3">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="User" class="rounded-circle mb-2" style="width: 70px;">
+                    <h5 class="fw-bold mb-0" id="user-name">লোড হচ্ছে...</h5>
+                    <p class="text-muted small" id="user-email">...</p>
+                </div>
+                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-overview" type="button"><i class="bi bi-grid-fill"></i> ওভারভিউ</button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-orders" type="button"><i class="bi bi-box-seam"></i> আমার অর্ডার (Track)</button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-billing" type="button"><i class="bi bi-geo-alt-fill"></i> ঠিকানা ও বিলিং</button>
+                    <button class="nav-link text-danger mt-3 border-top pt-3" id="logout-btn" type="button"><i class="bi bi-box-arrow-right"></i> লগআউট করুন</button>
                 </div>
             </div>
+        </div>
 
-            <!-- ডান দিকের মেইন কন্টেন্ট এরিয়া -->
-            <div class="col-md-9">
-                <div class="tab-content content-box" id="v-pills-tabContent">
-                    
-                    <!-- ওভারভিউ ট্যাব -->
-                    <div class="tab-pane fade show active" id="tab-overview">
-                        <h3 class="fw-bold mb-4 border-bottom pb-2">স্বাগতম, <span id="welcome-name" class="text-success">গ্রাহক</span>!</h3>
-                        <p class="fs-5 text-muted">আপনার ড্যাশবোর্ডে আপনাকে স্বাগতম। এখান থেকে আপনি খুব সহজেই আপনার অর্ডার ট্র্যাক করতে পারবেন এবং প্রোফাইল ম্যানেজ করতে পারবেন।</p>
-                        
-                        <div class="row mt-4">
-                            <div class="col-md-4">
-                                <div class="p-3 bg-light border rounded text-center">
-                                    <h2 class="fw-bold text-success">০</h2>
-                                    <p class="mb-0 fw-bold">মোট অর্ডার</p>
-                                </div>
+        <!-- মেইন কন্টেন্ট -->
+        <div class="col-md-9">
+            <div class="tab-content content-box" id="v-pills-tabContent">
+                
+                <!-- ওভারভিউ ট্যাব -->
+                <div class="tab-pane fade show active" id="tab-overview">
+                    <h3 class="fw-bold mb-4 border-bottom pb-2">স্বাগতম, <span id="welcome-name" class="text-success">গ্রাহক</span>!</h3>
+                    <p class="fs-5 text-muted">আপনার ড্যাশবোর্ডে আপনাকে স্বাগতম। এখান থেকে আপনি খুব সহজেই আপনার অর্ডার ট্র্যাক করতে পারবেন এবং প্রোফাইল ম্যানেজ করতে পারবেন।</p>
+                    <div class="row mt-4">
+                        <div class="col-md-4">
+                            <div class="p-3 bg-light border rounded text-center">
+                                <!-- এই ID দিয়ে জাভাস্ক্রিপ্ট টোটাল অর্ডার কাউন্ট বসাবে -->
+                                <h2 class="fw-bold text-success" id="total-order-count">⏳</h2>
+                                <p class="mb-0 fw-bold">মোট অর্ডার</p>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- আমার অর্ডার (ট্র্যাক ও ক্যানসেল) ট্যাব -->
-                    <div class="tab-pane fade" id="tab-orders">
-                        <h3 class="fw-bold mb-4 border-bottom pb-2">অর্ডার ট্র্যাকিং</h3>
-                        
-                        <!-- এটি একটি ডেমো অর্ডার (পরবর্তীতে ডাটাবেস থেকে আসবে) -->
-                        <div class="order-card d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <!-- আমার অর্ডার ট্যাব -->
+                <div class="tab-pane fade" id="tab-orders">
+                    <h3 class="fw-bold mb-4 border-bottom pb-2">অর্ডার ট্র্যাকিং</h3>
+                    
+                    <!-- ডেটাবেস থেকে অর্ডারগুলো এখানে এসে বসবে -->
+                    <div id="dynamic-order-list">
+                        <div class="text-center py-5">
+                            <div class="spinner-border text-success" role="status"></div>
+                            <h5 class="mt-3 text-muted">আপনার ডেটাবেস থেকে অর্ডার লোড হচ্ছে...</h5>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- বিলিং ইনফো ট্যাব -->
+                <div class="tab-pane fade" id="tab-billing">
+                    <h3 class="fw-bold mb-4 border-bottom pb-2">বিলিং ইনফরমেশন</h3>
+                    <p class="text-muted">আপনার ডিফল্ট ডেলিভারি ঠিকানা এখানে সেভ করে রাখতে পারেন, যাতে চেকআউটের সময় বারবার টাইপ করতে না হয়।</p>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- ফায়ারবেস ডেটাবেস ও লজিক -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    // Firestore থেকে ডেটা রিড ও আপডেট করার ফাংশনগুলো ইমপোর্ট করা হলো
+    import { getFirestore, collection, query, where, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAiyQ8hO4YsTLMkN2z8bCuKMnq5xuCcGBY",
+        authDomain: "keshtaru-8cf82.firebaseapp.com",
+        projectId: "keshtaru-8cf82",
+        storageBucket: "keshtaru-8cf82.firebasestorage.app",
+        messagingSenderId: "933852183012",
+        appId: "1:933852183012:web:615ddbfe64e5b0d9a2eff1",
+        measurementId: "G-P14WTYC8QS"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // পেজ লোড হলে ইউজার চেক করা
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            const userName = user.displayName || "কাস্টমার";
+            document.getElementById('user-name').innerText = userName;
+            document.getElementById('welcome-name').innerText = userName;
+            document.getElementById('user-email').innerText = user.email;
+            
+            // ইউজারের ইমেইল দিয়ে ফায়ারবেস থেকে তার করা সব অর্ডার কল করা
+            fetchMyOrders(user.email);
+        } else {
+            window.location.href = "index.html";
+        }
+    });
+
+    // ডেটাবেস থেকে ডেটা টেনে আনার মেইন ফাংশন
+    async function fetchMyOrders(userEmail) {
+        const orderListContainer = document.getElementById('dynamic-order-list');
+        const totalOrderCount = document.getElementById('total-order-count');
+
+        try {
+            // ডেটাবেসে খোঁজ করা হচ্ছে
+            const q = query(collection(db, "orders"), where("userEmail", "==", userEmail));
+            const querySnapshot = await getDocs(q);
+
+            // যদি কোনো অর্ডার না থাকে
+            if (querySnapshot.empty) {
+                orderListContainer.innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="bi bi-cart-x text-muted" style="font-size: 3rem;"></i>
+                        <h5 class="mt-3 text-muted">আপনার কোনো পূর্ববর্তী অর্ডার নেই!</h5>
+                        <a href="index.html#products" class="btn btn-success mt-2">শপিং করুন</a>
+                    </div>
+                `;
+                totalOrderCount.innerText = "০";
+                return;
+            }
+
+            let ordersArray = [];
+            querySnapshot.forEach((doc) => {
+                ordersArray.push({ id: doc.id, ...doc.data() });
+            });
+
+            // নতুন অর্ডারগুলো সবার ওপরে দেখানোর লজিক
+            ordersArray.sort((a, b) => {
+                let timeA = a.timestamp ? a.timestamp.toMillis() : 0;
+                let timeB = b.timestamp ? b.timestamp.toMillis() : 0;
+                return timeB - timeA; 
+            });
+
+            // HTML ডিজাইন জেনারেট করা
+            let htmlContent = "";
+            ordersArray.forEach(order => {
+                // স্ট্যাটাস অনুযায়ী ব্যাজের কালার পরিবর্তন
+                let badgeClass = "status-pending"; 
+                if (order.status === "Cancelled") badgeClass = "status-cancelled";
+                else if (order.status === "Delivered") badgeClass = "status-delivered";
+
+                // শুধুমাত্র Pending থাকলেই ক্যানসেল বাটন দেখাবে
+                let cancelBtnHTML = "";
+                if (order.status === "Pending") {
+                    cancelBtnHTML = `<button class="btn btn-sm btn-outline-danger mt-2 fw-bold" onclick="cancelMyOrder('${order.id}')"><i class="bi bi-x-circle"></i> ক্যানসেল অর্ডার</button>`;
+                }
+
+                htmlContent += `
+                    <div class="order-card bg-white">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
                             <div>
-                                <p class="mb-1 fw-bold text-muted">অর্ডার আইডি: #KESH-1001</p>
-                                <h5 class="fw-bold mb-1">Sandalwood Extra Wide Teeth Comb</h5>
-                                <p class="mb-0">পরিমাণ: ১ | <span class="fw-bold text-success">সর্বমোট: ৳ ৩৫০</span></p>
+                                <p class="mb-1 fw-bold text-muted small"><i class="bi bi-calendar-event"></i> তারিখ: ${order.orderDate}</p>
+                                <h5 class="fw-bold mb-1" style="color: #2c4c3b;">${order.productName}</h5>
+                                <p class="mb-0">পরিমাণ: ${order.qty} | <span class="fw-bold text-success">সর্বমোট: ৳ ${order.totalPrice}</span></p>
                             </div>
                             <div class="text-end">
-                                <span class="status-badge status-pending mb-2 d-inline-block">Pending (অপেক্ষমান)</span><br>
-                                <button class="btn btn-sm btn-outline-danger"><i class="bi bi-x-circle"></i> ক্যানসেল অর্ডার</button>
+                                <span class="status-badge ${badgeClass} d-inline-block shadow-sm">${order.status}</span><br>
+                                ${cancelBtnHTML}
                             </div>
                         </div>
-                        
-                        <!-- ডেটা না থাকলে যা দেখাবে -->
-                        <div class="text-center py-5" style="display: none;" id="no-order-msg">
-                            <i class="bi bi-cart-x text-muted" style="font-size: 3rem;"></i>
-                            <h5 class="mt-3 text-muted">আপনার কোনো পূর্ববর্তী অর্ডার নেই!</h5>
-                            <a href="index.html#products" class="btn btn-success mt-2">শপিং করুন</a>
-                        </div>
                     </div>
+                `;
+            });
 
-                    <!-- বিলিং ইনফো ট্যাব -->
-                    <div class="tab-pane fade" id="tab-billing">
-                        <h3 class="fw-bold mb-4 border-bottom pb-2">বিলিং ইনফরমেশন</h3>
-                        <p class="text-muted">আপনার ডিফল্ট ডেলিভারি ঠিকানা এখানে সেভ করে রাখতে পারেন, যাতে চেকআউটের সময় বারবার টাইপ করতে না হয়।</p>
-                        <!-- পরবর্তীতে এখানে ফর্ম অ্যাড করা হবে -->
-                    </div>
+            // স্ক্রিনে ডেটা বসিয়ে দেওয়া
+            orderListContainer.innerHTML = htmlContent;
+            totalOrderCount.innerText = ordersArray.length;
 
-                </div>
-            </div>
+        } catch (error) {
+            console.error(error);
+            orderListContainer.innerHTML = `<h5 class="text-danger text-center mt-4">অর্ডার লোড করতে সার্ভারে সমস্যা হয়েছে!</h5>`;
+        }
+    }
 
-        </div>
-    </div>
+    // অর্ডার ক্যানসেল করার ফাংশন (Global scope-এ দেওয়া হলো যেন HTML থেকে কল করা যায়)
+    window.cancelMyOrder = async function(orderId) {
+        if(confirm("আপনি কি নিশ্চিত যে এই অর্ডারটি ক্যানসেল করতে চান?")) {
+            try {
+                // ডেটাবেসে স্ট্যাটাস আপডেট করা
+                const orderRef = doc(db, "orders", orderId);
+                await updateDoc(orderRef, { status: "Cancelled" });
+                
+                alert("আপনার অর্ডারটি সফলভাবে ক্যানসেল করা হয়েছে।");
+                
+                // ক্যানসেল হওয়ার পর ড্যাশবোর্ড রিফ্রেশ করে নতুন ডেটা দেখানো
+                const user = auth.currentUser;
+                if(user) {
+                    document.getElementById('dynamic-order-list').innerHTML = `<div class="text-center py-3"><div class="spinner-border text-success" role="status"></div></div>`;
+                    fetchMyOrders(user.email);
+                }
+            } catch(error) {
+                alert("ক্যানসেল করতে সমস্যা হচ্ছে: " + error.message);
+            }
+        }
+    }
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- ফায়ারবেস অথেনটিকেশন (লগইন চেক করার জন্য) -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-        // ★★★ নিচে আপনার কপি করা firebaseConfig বসিয়ে দিন ★★★
-        const firebaseConfig = {
-
-            apiKey: "AIzaSyAiyQ8hO4YsTLMkN2z8bCuKMnq5xuCcGBY",
-            authDomain: "keshtaru-8cf82.firebaseapp.com",
-            projectId: "keshtaru-8cf82",
-            storageBucket: "keshtaru-8cf82.firebasestorage.app",
-            messagingSenderId: "933852183012",
-            appId: "1:933852183012:web:615ddbfe64e5b0d9a2eff1",
-            measurementId: "G-P14WTYC8QS"
-          
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-
-        // পেজ লোড হলেই চেক করবে কেউ লগইন করা আছে কি না
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // ইউজার লগইন করা থাকলে তার নাম ও ইমেইল ড্যাশবোর্ডে বসিয়ে দেওয়া
-                const userName = user.displayName || "কাস্টমার";
-                document.getElementById('user-name').innerText = userName;
-                document.getElementById('welcome-name').innerText = userName;
-                document.getElementById('user-email').innerText = user.email;
-            } else {
-                // লগইন করা না থাকলে জোর করে লগইন পেজে পাঠিয়ে দেবে (সিকিউরিটি)
+    // লগআউট লজিক
+    document.getElementById('logout-btn').addEventListener('click', () => {
+        if(confirm("আপনি কি লগআউট করতে চান?")) {
+            signOut(auth).then(() => {
                 window.location.href = "index.html";
-            }
-        });
-
-        // লগআউট বাটনের কাজ
-        document.getElementById('logout-btn').addEventListener('click', () => {
-            if(confirm("আপনি কি লগআউট করতে চান?")) {
-                signOut(auth).then(() => {
-                    window.location.href = "index.html";
-                });
-            }
-        });
-    </script>
+            });
+        }
+    });
+</script>
 </body>
 </html>
