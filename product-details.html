@@ -248,7 +248,41 @@
     </div>
 
     <!-- সম্পূর্ণ ডাটাবেস এবং ফাংশনালিটি -->
-    <script>
+    <script type="module">
+
+        //log in check  //log in check  //log in check  //log in check  //log in check
+
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAiyQ8hO4YsTLMkN2z8bCuKMnq5xuCcGBY",
+            authDomain: "keshtaru-8cf82.firebaseapp.com",
+            projectId: "keshtaru-8cf82",
+            storageBucket: "keshtaru-8cf82.firebasestorage.app",
+            messagingSenderId: "933852183012",
+            appId: "1:933852183012:web:615ddbfe64e5b0d9a2eff1",
+            measurementId: "G-P14WTYC8QS"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        
+        let isUserLoggedIn = false;
+
+        // লগইন চেক করার লজিক
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                isUserLoggedIn = true;
+            } else {
+                isUserLoggedIn = false;
+            }
+        });
+
+        //===================//===========//===================//
+
+
         const productsDB = {
 
             //display product id
@@ -428,8 +462,25 @@
             document.getElementById('main-desc').textContent = product.description;
 
             // [Order Now] বাটনে ক্লিক করলে চেকআউট পেজে নিয়ে যাবে
+
+
+
             document.getElementById('order-btn').addEventListener('click', function (e) {
                 e.preventDefault();
+                  
+                
+                // যদি লগইন করা না থাকে, তাহলে আটকে দেবে  // যদি লগইন করা না থাকে, তাহলে আটকে দেবে  // যদি লগইন করা না থাকে, তাহলে আটকে দেবে
+
+
+                if (!isUserLoggedIn) {
+                    alert("দুঃখিত! প্রোডাক্ট অর্ডার করতে হলে আপনাকে আগে লগইন করতে হবে।");
+                    window.location.href = "index.html"; // হোম পেজে পাঠাবে যেন পপ-আপ থেকে লগইন করতে পারে
+                    return; // কোড এখানেই থেমে যাবে, চেকআউটে যাবে না
+                }
+
+                //=================//================//===================//
+
+
                 let qty = document.getElementById('quantity').value;
                 // কাস্টমারকে checkout.html পেজে পাঠিয়ে দেওয়া হবে (সাথে প্রোডাক্ট আইডি ও পরিমাণ দিয়ে)
                 window.location.href = `checkout.html?id=${productId}&qty=${qty}`;
