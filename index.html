@@ -19,33 +19,116 @@
             object-position: center;
             background-color: #f8f9fa;
         }
+         html {overflow-y: scroll;}
         .product-card { transition: 0.3s; overflow: hidden; }
         .product-card:hover { transform: translateY(-8px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
         .product-img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; background-color: #fff; }
+        
+        
+        
+        /* স্মুথ স্ক্রল এবং ন্যাভবার যেন কন্টেন্ট ঢেকে না দেয় */
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px; /* স্টিকি ন্যাভবারের জন্য জায়গা ছাড়বে */
+            overflow-y: scroll;
+        }
+
+        /* মেইন মেনুর আইটেমগুলোর মাঝখানে গ্যাপ */
+        .navbar-nav .nav-item {
+            margin-right: 25px; 
+        }
+
+        /* Hover Dropdown Effect (শুধু ডেক্সটপের জন্য) */
+        @media all and (min-width: 992px) {
+            .navbar .nav-item.dropdown:hover .dropdown-menu {
+                display: block;
+                margin-top: 0;
+                transition: 0.3s;
+            }
+        }
+        
+        /* মোবাইল মেনুর (Offcanvas) ভেতরের লিংকগুলোর কালার ঠিক রাখতে */
+        .offcanvas-custom { background-color: #2c4c3b; }
+
+        /* ড্রপডাউন মেনুর প্রিমিয়াম ডিজাইন (সবুজ থিম এবং লাইন সেপারেটর) */
+        .custom-dropdown {
+            background-color: #2c4c3b;
+            border: 1px solid #1f3629;
+            border-radius: 8px;
+            padding: 0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        .custom-dropdown .dropdown-item {
+            color: #e9ecef;
+            padding: 12px 20px;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(255,255,255,0.1); /* সেপারেটর লাইন */
+            transition: 0.3s;
+        }
+        .custom-dropdown li:last-child .dropdown-item {
+            border-bottom: none; /* শেষের আইটেমে লাইন থাকবে না */
+        }
+        .custom-dropdown .dropdown-item:hover {
+            background-color: #1f3629; 
+            color: #ffffff;
+            padding-left: 28px; /* হোভার করলে দারুণভাবে একটু ডানে সরবে */
+        }
     </style>
 </head>
 <body>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top shadow-sm">
-        <div class="container">
-            <a class="navbar-brand" href="index.html">
-                <img src="image/logo.png" alt="Keshtaru Logo" class="brand-logo rounded-circle bg-white p-1">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto fw-semibold fs-5">
+    <!-- Navbar -->  <!-- Navbar -->   <!-- Navbar -->   <!-- Navbar -->   <!-- Navbar -->  <!-- Navbar -->
+    
+    
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top shadow-sm py-0" style="min-height: 60px;">
+    <div class="container-fluid px-3 px-md-4">
+        
+        <!-- Logo -->
+        <a class="navbar-brand p-0" href="index.html" style="margin-left: 60px;">
+            <img src="image/logo.png" alt="Keshtaru Logo" class="brand-logo rounded-circle p-1" 
+                 style="width: 90px; height: 90px; object-fit: cover;">
+        </a>
+        
+        <!-- Mobile Toggle Button -->
+        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <!-- Offcanvas Sidebar -->
+        <div class="offcanvas offcanvas-end offcanvas-custom" tabindex="-1" id="offcanvasNavbar">
+            <div class="offcanvas-header border-bottom border-success">
+                <h5 class="offcanvas-title text-white fw-bold">Keshtaru</h5>
+                <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="offcanvas"></button>
+            </div>
+            
+            <div class="offcanvas-body">
+                <ul class="navbar-nav ms-auto fw-semibold fs-5 pe-lg-5" style="margin-right: 50px;">
                     <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#products">Our Products</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#about">About Us</a></li>
-                    <li class="nav-item"><a class="nav-link" href="hi">hi</a></li>
+                    
+                    <!-- Products Dropdown (সুন্দর ডিজাইন করা) -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="index.html#products" id="productDropdown" data-bs-toggle="dropdown">
+                            Our Products
+                        </a>
+                        <ul class="dropdown-menu custom-dropdown" aria-labelledby="productDropdown">
+                            <li><a class="dropdown-item" href="index.html#category-comb">চিরুনি (Comb)</a></li>
+                            <li><a class="dropdown-item" href="index.html#category-oil">তেল (Oil)</a></li>
+                            <li><a class="dropdown-item" href="index.html#category-pack">হেয়ার প্যাক (Hair Pack)</a></li>
+                        </ul>
+                    </li>
+                    
+                    <li class="nav-item"><a class="nav-link" href="index.html#about">About Us</a></li>
                 </ul>
             </div>
         </div>
-    </nav>
 
+    </div>
+</nav>
+
+   
+   
+   
     <!-- Highlight Box -->
     <!-- Highlight Box -->
     <header class="container-fluid px-0 mt-4 mx-auto" style="max-width: 1800px;">
@@ -97,7 +180,7 @@
             
             <!-- Category: Comb -->
             
-            <h4 class="mb-4 fw-bold border-bottom pb-2">চিরুনি (Comb)</h4>
+            <h4 id="category-comb" class="mb-4 fw-bold border-bottom pb-2">চিরুনি (Comb)</h4>
             <div class="row g-4 mb-5">
                 
                 <!--1ST COMB-->
@@ -181,7 +264,7 @@
 
             <!-- Category: Oil -->
             
-            <h4 class="mb-4 fw-bold border-bottom pb-2 mt-5">তেল (Oil)</h4>
+            <h4 id="category-oil" class="mb-4 fw-bold border-bottom pb-2 mt-5">তেল (Oil)</h4>
             <div class="row g-4 mb-5">
                 
                <!--1ST OILL-->
@@ -227,7 +310,7 @@
 
             <!-- Category: Hair Pack -->
 
-            <h4 class="mb-4 fw-bold border-bottom pb-2 mt-5">হেয়ার প্যাক (Hair Pack)</h4>
+            <h4 id="category-pack" class="mb-4 fw-bold border-bottom pb-2 mt-5">হেয়ার প্যাক (Hair Pack)</h4>
             <div class="row g-4 mb-5">
 
                 <!--1ST HAIR Pack-->
@@ -309,5 +392,17 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- মোবাইল মেনু (Offcanvas) ক্লিক করার পর অটোমেটিক বন্ধ করার কোড -->
+    <script>
+        document.querySelectorAll('.offcanvas-body .dropdown-item').forEach(item => {
+            item.addEventListener('click', () => {
+                let offcanvasElement = document.getElementById('offcanvasNavbar');
+                let bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
+                if (bsOffcanvas) {
+                    bsOffcanvas.hide();
+                }
+            });
+        });
+    </script>
 </body>
 </html>
