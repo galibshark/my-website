@@ -246,6 +246,76 @@
             </div>
         </div>
     </div>
+    
+    
+    
+    <!-- log in pop up  ) -->  <!-- log in pop up  ) -->  <!-- log in pop up  ) -->  <!-- log in pop up  ) -->
+
+
+
+<!-- Auth Modal (আসল লগইন ও রেজিস্ট্রেশন পপ-আপ) -->
+<div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 12px;">
+            <div class="modal-body p-4 p-md-5">
+                <button type="button" class="btn-close position-absolute top-0 end-0 m-3 shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                
+                <!-- লগইন বক্স -->
+                <div id="modal-login-box">
+                    <h3 class="text-center fw-bold mb-4" style="color: #2c4c3b;">লগইন করুন</h3>
+                    <form id="modal-login-form" onsubmit="return false;">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold" style="color: #2c4c3b;">ইমেইল অ্যাড্রেস</label>
+                            <input type="email" id="modal-login-email" class="form-control form-control-lg" placeholder="example@email.com" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold" style="color: #2c4c3b;">পাসওয়ার্ড</label>
+                            <input type="password" id="modal-login-password" class="form-control form-control-lg" placeholder="পাসওয়ার্ড দিন" required>
+                        </div>
+                        <button type="submit" id="modal-login-btn" class="btn w-100 py-2 fs-5 text-white fw-bold shadow-sm" style="background-color: #2c4c3b;">লগইন</button>
+                    </form>
+                    <p class="text-center mt-4 fw-medium text-muted">অ্যাকাউন্ট নেই? <span class="text-success fw-bold" style="cursor: pointer; text-decoration: underline;" onclick="toggleModalAuth('register')">নতুন অ্যাকাউন্ট খুলুন</span></p>
+                </div>
+
+                <!-- রেজিস্টার বক্স -->
+                <div id="modal-register-box" style="display: none;">
+                    <h3 class="text-center fw-bold mb-4" style="color: #2c4c3b;">অ্যাকাউন্ট তৈরি করুন</h3>
+                    <form id="modal-register-form" onsubmit="return false;">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold" style="color: #2c4c3b;">আপনার নাম</label>
+                            <input type="text" id="modal-reg-name" class="form-control form-control-lg" placeholder="আপনার নাম লিখুন" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold" style="color: #2c4c3b;">ইমেইল অ্যাড্রেস</label>
+                            <input type="email" id="modal-reg-email" class="form-control form-control-lg" placeholder="example@email.com" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold" style="color: #2c4c3b;">নতুন পাসওয়ার্ড (অন্তত ৬ অক্ষরের)</label>
+                            <input type="password" id="modal-reg-password" class="form-control form-control-lg" placeholder="পাসওয়ার্ড তৈরি করুন" required>
+                        </div>
+                        <button type="submit" id="modal-reg-btn" class="btn btn-success w-100 py-2 fs-5 fw-bold shadow-sm">অ্যাকাউন্ট খুলুন</button>
+                    </form>
+                    <p class="text-center mt-4 fw-medium text-muted">ইতিমধ্যেই অ্যাকাউন্ট আছে? <span class="text-success fw-bold" style="cursor: pointer; text-decoration: underline;" onclick="toggleModalAuth('login')">লগইন করুন</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ফর্ম টগল করার স্ক্রিপ্ট -->
+<script>
+    function toggleModalAuth(type) {
+        if (type === 'register') {
+            document.getElementById('modal-login-box').style.display = 'none';
+            document.getElementById('modal-register-box').style.display = 'block';
+        } else {
+            document.getElementById('modal-register-box').style.display = 'none';
+            document.getElementById('modal-login-box').style.display = 'block';
+        }
+    }
+</script>
+
+
 
     <!-- সম্পূর্ণ ডাটাবেস এবং ফাংশনালিটি -->
     <script type="module">
@@ -254,8 +324,9 @@
 
 
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
+        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        
+        
         const firebaseConfig = {
             apiKey: "AIzaSyAiyQ8hO4YsTLMkN2z8bCuKMnq5xuCcGBY",
             authDomain: "keshtaru-8cf82.firebaseapp.com",
@@ -268,16 +339,12 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        
         let isUserLoggedIn = false;
+        
 
         // লগইন চেক করার লজিক
         onAuthStateChanged(auth, (user) => {
-            if (user) {
-                isUserLoggedIn = true;
-            } else {
-                isUserLoggedIn = false;
-            }
+          isUserLoggedIn = !!user; // লগইন থাকলে true হবে
         });
 
         //===================//===========//===================//
@@ -458,33 +525,69 @@
             document.title = product.name + " - Keshtaru";
             document.getElementById('main-image').src = product.image;
             document.getElementById('main-title').textContent = product.name;
-            document.getElementById('main-price').textContent = product.price;
+            
+            
+            
+            //calculator      //calculator     //calculator     //calculator     //calculator 
+            
+            
+            // দাম কনভার্ট করার ফাংশন ও লজিক
+            function getNumericPrice(priceStr) {
+                let engStr = priceStr.replace(/[০-৯]/g, d => '০১২৩৪৫৬৭৮৯'.indexOf(d));
+                return parseInt(engStr.replace(/\D/g, '')) || 0;
+            }
+            function convertToBanglaNumber(num) {
+                return num.toString().replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[d]);
+            }
+
+            const qtyInput = document.getElementById('quantity');
+            const basePrice = getNumericPrice(product.price); 
+            
+            qtyInput.addEventListener('input', function() {
+                let currentQty = parseInt(qtyInput.value) || 1;
+                if (currentQty < 1) { currentQty = 1; qtyInput.value = 1; }
+                document.getElementById('main-price').textContent = `৳ ${convertToBanglaNumber(basePrice * currentQty)}`;
+            });
+
+
+
+
+
+
+
+
             document.getElementById('main-desc').textContent = product.description;
 
+            
+
+
+
+
+
+
             // [Order Now] বাটনে ক্লিক করলে চেকআউট পেজে নিয়ে যাবে
-
-
-
             document.getElementById('order-btn').addEventListener('click', function (e) {
                 e.preventDefault();
-                  
                 
-                // যদি লগইন করা না থাকে, তাহলে আটকে দেবে  // যদি লগইন করা না থাকে, তাহলে আটকে দেবে  // যদি লগইন করা না থাকে, তাহলে আটকে দেবে
-
-
                 if (!isUserLoggedIn) {
-                    alert("দুঃখিত! প্রোডাক্ট অর্ডার করতে হলে আপনাকে আগে লগইন করতে হবে।");
-                    window.location.href = "index.html"; // হোম পেজে পাঠাবে যেন পপ-আপ থেকে লগইন করতে পারে
-                    return; // কোড এখানেই থেমে যাবে, চেকআউটে যাবে না
+                    var authModal = new bootstrap.Modal(document.getElementById('authModal'));
+                    authModal.show();
+                    return; 
                 }
 
-                //=================//================//===================//
-
-
                 let qty = document.getElementById('quantity').value;
-                // কাস্টমারকে checkout.html পেজে পাঠিয়ে দেওয়া হবে (সাথে প্রোডাক্ট আইডি ও পরিমাণ দিয়ে)
                 window.location.href = `checkout.html?id=${productId}&qty=${qty}`;
             });
+
+               
+            
+            //===========////=====================//====================//
+
+
+
+
+
+
 
             // রিভিউ সেকশন ও গ্যালারি ডায়নামিক করা
             const reviewSection = document.getElementById('review-section');
@@ -551,6 +654,54 @@
             document.getElementById('main-desc').textContent = "আপনি যে প্রোডাক্টটি খুঁজছেন তা হয়তো রিমুভ করা হয়েছে অথবা লিংকটি ভুল। দয়া করে হোম পেজে ফিরে যান।";
             document.getElementById('order-btn').style.display = "none";
         }
+
+
+
+        // ==========================================
+        // পপ-আপ থেকে লগইন ও রেজিস্ট্রেশন করার লজিক
+        // ==========================================
+
+        document.getElementById('modal-login-form').addEventListener('submit', function() {
+            const btn = document.getElementById('modal-login-btn');
+            btn.innerHTML = "লগইন হচ্ছে... ⏳";
+            const email = document.getElementById('modal-login-email').value;
+            const password = document.getElementById('modal-login-password').value;
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then(() => { 
+                    location.reload(); // লগইন সফল হলে পেজটা রিফ্রেশ হবে
+                }) 
+                .catch(() => {
+                    alert("ইমেইল অথবা পাসওয়ার্ড ভুল হয়েছে!");
+                    btn.innerHTML = "লগইন";
+                });
+        });
+
+        document.getElementById('modal-register-form').addEventListener('submit', function() {
+            const btn = document.getElementById('modal-reg-btn');
+            btn.innerHTML = "অ্যাকাউন্ট তৈরি হচ্ছে... ⏳";
+            const name = document.getElementById('modal-reg-name').value;
+            const email = document.getElementById('modal-reg-email').value;
+            const password = document.getElementById('modal-reg-password').value;
+
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    updateProfile(userCredential.user, { displayName: name }).then(() => {
+                        location.reload(); // অ্যাকাউন্ট খোলা সফল হলে পেজ রিফ্রেশ হবে
+                    });
+                })
+                .catch((error) => {
+                    alert("সমস্যা হয়েছে: " + error.message);
+                    btn.innerHTML = "অ্যাকাউন্ট খুলুন";
+                });
+        });
+
+
+        ///===========================//=========================================//
+
+
+
+
         
         // লাইটবক্সে ক্লিক করা ছবিতে যাওয়ার ফাংশন
         function goToSlide(index) {
