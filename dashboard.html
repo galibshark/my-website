@@ -27,6 +27,59 @@
         .order-card { border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
         .status-badge { font-size: 0.85rem; padding: 5px 10px; border-radius: 5px; font-weight: bold; }
         .status-pending { background-color: #fff3cd; color: #856404; }
+
+         
+        /*out product slider */
+
+        html {overflow-y: scroll;}
+        /* স্মুথ স্ক্রল এবং ন্যাভবার যেন কন্টেন্ট ঢেকে না দেয় */
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px; /* স্টিকি ন্যাভবারের জন্য জায়গা ছাড়বে */
+            overflow-y: scroll;
+        }
+
+        /* মেইন মেনুর আইটেমগুলোর মাঝখানে গ্যাপ */
+        .navbar-nav .nav-item {
+            margin-right: 25px; 
+        }
+
+        /* Hover Dropdown Effect (শুধু ডেক্সটপের জন্য) */
+        @media all and (min-width: 992px) {
+            .navbar .nav-item.dropdown:hover .dropdown-menu {
+                display: block;
+                margin-top: 0;
+                transition: 0.3s;
+            }
+        }
+        
+        /* মোবাইল মেনুর (Offcanvas) ভেতরের লিংকগুলোর কালার ঠিক রাখতে */
+        .offcanvas-custom { background-color: #2c4c3b; }
+
+        /* ড্রপডাউন মেনুর প্রিমিয়াম ডিজাইন (সবুজ থিম এবং লাইন সেপারেটর) */
+        .custom-dropdown {
+            background-color: #2c4c3b;
+            border: 1px solid #1f3629;
+            border-radius: 8px;
+            padding: 0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        .custom-dropdown .dropdown-item {
+            color: #e9ecef;
+            padding: 12px 20px;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(255,255,255,0.1); /* সেপারেটর লাইন */
+            transition: 0.3s;
+        }
+        .custom-dropdown li:last-child .dropdown-item {
+            border-bottom: none; /* শেষের আইটেমে লাইন থাকবে না */
+        }
+        .custom-dropdown .dropdown-item:hover {
+            background-color: #1f3629; 
+            color: #ffffff;
+            padding-left: 28px; /* হোভার করলে দারুণভাবে একটু ডানে সরবে */
+        }
     </style>
 </head>
 <body>
@@ -35,7 +88,7 @@
       <!-- Navbar -->    <!-- Navbar -->   <!-- Navbar -->   <!-- Navbar -->   <!-- Navbar -->    <!-- Navbar -->    <!-- Navbar -->   <!-- Navbar -->
 
 
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top shadow-sm py-0" style="min-height: 60px;">
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top shadow-sm py-0" style="min-height: 60px;">
     <div class="container-fluid px-3 px-md-4">
         
         <!-- Logo -->
