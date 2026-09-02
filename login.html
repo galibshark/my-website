@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>লগইন / রেজিস্টার - Keshtaru</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        /* স্মুথ স্ক্রল এবং ন্যাভবার */
+        html { scroll-behavior: smooth; overflow-y: scroll; }
+        .navbar-custom { background-color: #2c4c3b; }
+        .brand-logo { height: 65px; object-fit: contain; }
+        
+        /* লগইন বক্সের ডিজাইন */
+        .auth-container { max-width: 450px; margin: 50px auto; }
+        .auth-card { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid #e0e0e0; }
+        .auth-title { color: #2c4c3b; font-weight: bold; text-align: center; margin-bottom: 25px; }
+        .form-label { font-weight: 600; color: #2c4c3b; }
+        .btn-custom { background-color: #2c4c3b; color: white; font-weight: bold; transition: 0.3s; }
+        .btn-custom:hover { background-color: #1f3629; color: white; }
+        .toggle-text { text-align: center; margin-top: 15px; font-weight: 500; }
+        .toggle-link { color: #198754; cursor: pointer; text-decoration: underline; }
+        
+        /* মোবাইল মেনুর (Offcanvas) ডিজাইন */
+        .offcanvas-custom { background-color: #2c4c3b; }
+    </style>
+</head>
+<body class="bg-light">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top shadow-sm py-0" style="min-height: 60px;">
+        <div class="container-fluid px-3 px-md-4">
+            <a class="navbar-brand p-0" href="index.html" style="margin-left: 60px;">
+                <img src="image/logo.png" alt="Keshtaru Logo" class="brand-logo rounded-circle p-1" style="width: 90px; height: 90px; object-fit: cover;">
+            </a>
+            
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="offcanvas offcanvas-end offcanvas-custom" tabindex="-1" id="offcanvasNavbar">
+                <div class="offcanvas-header border-bottom border-success">
+                    <h5 class="offcanvas-title text-white fw-bold">Keshtaru</h5>
+                    <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="offcanvas"></button>
+                </div>
+                
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav ms-auto fw-semibold fs-5 pe-lg-5" style="margin-right: 50px;">
+                        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="index.html#products">Our Products</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="login.html">Login</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- লগইন ও রেজিস্টার সেকশন -->
+    <div class="container auth-container">
+        
+        <!-- লগইন ফর্ম -->
+        <div class="auth-card" id="login-box">
+            <h3 class="auth-title">লগইন করুন</h3>
+            <form id="login-form">
+                <div class="mb-3">
+                    <label class="form-label">ইমেইল অ্যাড্রেস</label>
+                    <input type="email" id="login-email" class="form-control" placeholder="example@email.com" required>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">পাসওয়ার্ড</label>
+                    <input type="password" id="login-password" class="form-control" placeholder="পাসওয়ার্ড দিন" required>
+                </div>
+                <button type="submit" id="login-btn" class="btn btn-custom w-100 py-2 fs-5">লগইন</button>
+            </form>
+            <p class="toggle-text">অ্যাকাউন্ট নেই? <span class="toggle-link" onclick="toggleAuth('register')">নতুন অ্যাকাউন্ট খুলুন</span></p>
+        </div>
+
+        <!-- রেজিস্টার ফর্ম (ডিফল্টভাবে লুকানো থাকবে) -->
+        <div class="auth-card" id="register-box" style="display: none;">
+            <h3 class="auth-title">নতুন অ্যাকাউন্ট তৈরি করুন</h3>
+            <form id="register-form">
+                <div class="mb-3">
+                    <label class="form-label">আপনার নাম</label>
+                    <input type="text" id="reg-name" class="form-control" placeholder="আপনার নাম লিখুন" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">ইমেইল অ্যাড্রেস</label>
+                    <input type="email" id="reg-email" class="form-control" placeholder="example@email.com" required>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">নতুন পাসওয়ার্ড (অন্তত ৬ অক্ষরের)</label>
+                    <input type="password" id="reg-password" class="form-control" placeholder="পাসওয়ার্ড তৈরি করুন" required>
+                </div>
+                <button type="submit" id="reg-btn" class="btn btn-success w-100 py-2 fs-5 fw-bold">অ্যাকাউন্ট খুলুন</button>
+            </form>
+            <p class="toggle-text">ইতিমধ্যেই অ্যাকাউন্ট আছে? <span class="toggle-link" onclick="toggleAuth('login')">লগইন করুন</span></p>
+        </div>
+        
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- ফর্ম টগল করার সাধারণ স্ক্রিপ্ট -->
+    <script>
+        function toggleAuth(type) {
+            if (type === 'register') {
+                document.getElementById('login-box').style.display = 'none';
+                document.getElementById('register-box').style.display = 'block';
+            } else {
+                document.getElementById('register-box').style.display = 'none';
+                document.getElementById('login-box').style.display = 'block';
+            }
+        }
+    </script>
+
+    <!-- ফায়ারবেস অথেনটিকেশন (Firebase v10 Modular SDK) -->
+    <script type="module">
+        // ফায়ারবেসের মেইন টুলগুলো ইমপোর্ট করা
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // ★★★ নিচে আপনার কপি করা firebaseConfig বসিয়ে দিন ★★★
+        const firebaseConfig = {
+
+            apiKey: "AIzaSyAiyQ8hO4YsTLMkN2z8bCuKMnq5xuCcGBY",
+            authDomain: "keshtaru-8cf82.firebaseapp.com",
+            projectId: "keshtaru-8cf82",
+            storageBucket: "keshtaru-8cf82.firebasestorage.app",
+            messagingSenderId: "933852183012",
+            appId: "1:933852183012:web:615ddbfe64e5b0d9a2eff1",
+            measurementId: "G-P14WTYC8QS"
+          
+        };
+
+
+        // ফায়ারবেস চালু করা
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // নতুন অ্যাকাউন্ট খোলা (Registration Logic)
+        document.getElementById('register-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('reg-btn');
+            btn.innerHTML = "অ্যাকাউন্ট তৈরি হচ্ছে... ⏳";
+            
+            const name = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // নাম সেভ করা
+                    updateProfile(userCredential.user, { displayName: name }).then(() => {
+                        alert("অভিনন্দন! আপনার অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে।");
+                        window.location.href = "index.html"; // লগইন শেষে হোম পেজে নিয়ে যাবে
+                    });
+                })
+                .catch((error) => {
+                    alert("দুঃখিত, সমস্যা হয়েছে: " + error.message);
+                    btn.innerHTML = "অ্যাকাউন্ট খুলুন";
+                });
+        });
+
+        // লগইন করা (Login Logic)
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('login-btn');
+            btn.innerHTML = "লগইন হচ্ছে... ⏳";
+            
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    alert("সফলভাবে লগইন হয়েছে!");
+                    window.location.href = "index.html"; // লগইন শেষে হোম পেজে নিয়ে যাবে
+                })
+                .catch((error) => {
+                    alert("ইমেইল অথবা পাসওয়ার্ড ভুল হয়েছে!");
+                    btn.innerHTML = "লগইন";
+                });
+        });
+    </script>
+</body>
+</html>
