@@ -221,7 +221,42 @@
     <!-- ==========================================
          জাভাস্ক্রিপ্ট (লজিক ও ভ্যালিডেশন)
     =========================================== -->
-    <script>
+    <!-- ==========================================
+         জাভাস্ক্রিপ্ট (লজিক, ভ্যালিডেশন ও ডেটাবেস)
+    =========================================== -->
+    
+    <!-- ফায়ারবেস চালানোর জন্য script ট্যাগে type="module" দেওয়া হয়েছে -->
+    <script type="module">
+
+        // ================================================================
+        // ফায়ারবেস ইমপোর্ট ও কনফিগারেশন (নতুন যুক্ত করা হয়েছে)
+        // ================================================================
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAiyQ8hO4YsTLMkN2z8bCuKMnq5xuCcGBY",
+            authDomain: "keshtaru-8cf82.firebaseapp.com",
+            projectId: "keshtaru-8cf82",
+            storageBucket: "keshtaru-8cf82.firebasestorage.app",
+            messagingSenderId: "933852183012",
+            appId: "1:933852183012:web:615ddbfe64e5b0d9a2eff1",
+            measurementId: "G-P14WTYC8QS"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // কাস্টমার লগইন করা থাকলে তার ইমেইলটা সেভ করে রাখব
+        let currentUserEmail = "";
+        onAuthStateChanged(auth, (user) => {
+            if (user) { currentUserEmail = user.email; }
+        });
+        // ================================================================
+
+
         // এখানে আপনার আগের প্রোডাক্ট ডাটাবেসটি রাখতে হবে যেন চেকআউট পেজ দাম হিসাব করতে পারে
         const productsDB = {
             "wide-comb": { name: "Sandalwood Extra Wide Teeth Comb", price: 350 },
@@ -254,7 +289,7 @@
             document.getElementById('summary-price').textContent = `৳ ${selectedProduct.price}`;
             document.getElementById('total-price').textContent = `৳ ${totalPrice}`;
         } else {
-            alert("কোনো প্রোডাক্ট সিলেক্ট করা হয়নি!");
+            alert("কোনো প্রোডাক্ট সিলেক্ট করা হয়নি!");
             window.location.href = "index.html";
         }
 
@@ -269,11 +304,11 @@
 
             gpsBtn.innerHTML = "⏳ লোকেশন খোঁজা হচ্ছে...";
 
-            // ব্রাউজারের লোকেশন পারমিশন চাওয়া
+            // ব্রাউজারের লোকেশন পারমিশন চাওয়া
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     function(position) {
-                        // যদি কাস্টমার Allow করে (লোকেশন পাওয়া গেছে)
+                        // যদি কাস্টমার Allow করে (লোকেশন পাওয়া গেছে)
                         let lat = position.coords.latitude;
                         let lon = position.coords.longitude;
                         
@@ -282,12 +317,12 @@
                         mapLinkInput.value = googleMapsLink;
                         
                         gpsBtn.classList.replace('btn-outline-primary', 'btn-success');
-                        gpsBtn.innerHTML = "✔ লোকেশন যুক্ত হয়েছে";
+                        gpsBtn.innerHTML = "✔ লোকেশন যুক্ত হয়েছে";
                         gpsStatus.style.display = "block";
                     },
                     function(error) {
                         // যদি কাস্টমার Deny করে বা জিপিএস অফ থাকে
-                        alert("লোকেশন পাওয়া যায়নি! দয়া করে আপনার ডিভাইসের লোকেশন অন করুন অথবা নিচে ম্যানুয়ালি ঠিকানা লিখুন।");
+                        alert("লোকেশন পাওয়া যায়নি! দয়া করে আপনার ডিভাইসের লোকেশন অন করুন অথবা নিচে ম্যানুয়ালি ঠিকানা লিখুন।");
                         gpsBtn.innerHTML = "📍 [বর্তমান লোকেশন নিন]";
                     }
                 );
@@ -298,11 +333,13 @@
 
 
         /* ==========================================
-           [Place Order] বাটনের ভ্যালিডেশন ও হোয়াটসঅ্যাপ লজিক
+           [Place Order] বাটনের ভ্যালিডেশন ও ডেটাবেসে ডেটা পাঠানো
         ========================================== */
-        document.getElementById('place-order-btn').addEventListener('click', function() {
+        
+        // async যুক্ত করা হয়েছে যেন await ব্যবহার করা যায়
+        document.getElementById('place-order-btn').addEventListener('click', async function() {
             
-            // ইনপুট ফিল্ডের ভ্যালুগুলো নেওয়া
+            // ইনপুট ফিল্ডের ভ্যালুগুলো নেওয়া
             let name = document.getElementById('c-name').value.trim();
             let phone = document.getElementById('c-phone').value.trim();
             let email = document.getElementById('c-email').value.trim();
@@ -315,7 +352,7 @@
 
             let isValid = true;
 
-            // ১. ফোন নম্বর চেক (অবশ্যই ১১ ডিজিট এবং ০ দিয়ে শুরু হতে হবে)
+            // ১. ফোন নম্বর চেক (অবশ্যই ১১ ডিজিট এবং ০ দিয়ে শুরু হতে হবে)
             if (phone.length !== 11 || !phone.startsWith("01")) {
                 document.getElementById('phone-error').style.display = "block";
                 isValid = false;
@@ -329,59 +366,97 @@
 
             // ৩. নাম ও ঠিকানা ফাঁকা আছে কি না চেক
             if(name === "" || address === "") {
-                alert("দয়া করে নাম এবং বিস্তারিত ঠিকানা পূরণ করুন!");
+                alert("দয়া করে নাম এবং বিস্তারিত ঠিকানা পূরণ করুন!");
                 isValid = false;
             }
 
-            // যদি সব তথ্য সঠিক থাকে, তবেই ডেটাবেসে (Google Sheet) পাঠাবে
+
+            // যদি সব তথ্য সঠিক থাকে, তবেই ডেটাবেসে পাঠাবে
             if(isValid) {
                 
                 let orderBtn = document.getElementById('place-order-btn');
                 
-                // বাটনটিকে লোডিং স্টেটে নিয়ে যাওয়া
+                // বাটনটিকে লোডিং স্টেটে নিয়ে যাওয়া
                 orderBtn.innerHTML = "অর্ডার সাবমিট হচ্ছে... ⏳";
                 orderBtn.disabled = true;
 
-                // ওয়েবসাইটের বর্তমান লিংক থেকে প্রোডাক্ট পেজের লিংক অটোমেটিক বানানো
+                // ওয়েবসাইটের বর্তমান লিংক থেকে প্রোডাক্ট পেজের লিংক অটোমেটিক বানানো
                 let baseUrl = window.location.href.split('checkout.html')[0];
                 let productFullUrl = baseUrl + "product-details.html?id=" + productId;
 
-                // কাস্টমারের ডেটাগুলো একসাথে প্যাক করা
-                let orderData = {
-                    name: name,
-                    phone: phone,
-                    email: email,
-                    address: address,
-                    mapLink: mapLink,
-                    productName: selectedProduct.name,
-                    productUrl: productFullUrl, // <--- এই নতুন লাইনটি যুক্ত করা হলো
-                    qty: qty,
-                    totalPrice: totalPrice
-                };
 
-                // ★★★ এখানে আপনার গুগল শিটের Apps Script URL-টি বসান ★★★
-                const scriptURL = 'https://script.google.com/macros/s/AKfycbwQKtWN59oVGvANiWCi3ExAGYUfU83aRxsRXh5wlBC6IlJ5jNWhXiNWuoQwmM3LNblkcA/exec';
+                try {
 
-                // ফায়ারবেসের মতো ডেটাবেসে ডেটা পাঠানো (Fetch API)
-                fetch(scriptURL, {
-                    method: 'POST',
-                    body: JSON.stringify(orderData),
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }
-                })
-                .then(response => {
-                    // অর্ডার সফল হলে
-                    alert("ধন্যবাদ! আপনার অর্ডারটি সফলভাবে সম্পন্ন হয়েছে। খুব শীঘ্রই আমাদের প্রতিনিধি আপনার সাথে যোগাযোগ করবে।");
-                    window.location.href = "index.html"; // অর্ডার শেষে হোম পেজে পাঠিয়ে দেওয়া
-                })
-                .catch(error => {
-                    // যদি কোনো টেকনিক্যাল সমস্যা হয়
-                    alert("দুঃখিত, সার্ভারে সমস্যা হচ্ছে। দয়া করে আবার চেষ্টা করুন।");
+                    // ================================================================
+                    // পার্ট ১: ফায়ারবেস ডেটাবেসে ডেটা পাঠানো (ড্যাশবোর্ডের জন্য)
+                    // ================================================================
+                    
+                    // কাস্টমার লগইন করা থাকলে তার আসল ইমেইল নেবে, নাহলে ফর্মেরটা নেবে
+                    const finalEmail = currentUserEmail ? currentUserEmail : email;
+
+                    await addDoc(collection(db, "orders"), {
+                        customerName: name,
+                        customerPhone: phone,
+                        userEmail: finalEmail, 
+                        address: address,
+                        productName: selectedProduct.name,
+                        qty: qty,
+                        totalPrice: totalPrice,
+                        status: "Pending", // স্ট্যাটাস শুরুতে Pending থাকবে
+                        orderDate: new Date().toLocaleString('en-US', { timeZone: 'Asia/Dhaka' }),
+                        timestamp: serverTimestamp() // সময়ের হিসাব রাখার জন্য
+                    });
+
+                    // ফায়ারবেসের কাজ শেষ!
+
+
+
+                    // ================================================================
+                    // পার্ট ২: গুগল শিটে ডেটা পাঠানো (আপনার অ্যাডমিন প্যানেলের জন্য)
+                    // ================================================================
+                    
+                    let orderData = {
+                        name: name,
+                        phone: phone,
+                        email: email,
+                        address: address,
+                        mapLink: mapLink,
+                        productName: selectedProduct.name,
+                        productUrl: productFullUrl, 
+                        qty: qty,
+                        totalPrice: totalPrice
+                    };
+
+                    const scriptURL = 'https://script.google.com/macros/s/AKfycbwQKtWN59oVGvANiWCi3ExAGYUfU83aRxsRXh5wlBC6IlJ5jNWhXiNWuoQwmM3LNblkcA/exec';
+
+                    await fetch(scriptURL, {
+                        method: 'POST',
+                        body: JSON.stringify(orderData),
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+                    });
+
+                    // গুগল শিটের কাজ শেষ!
+
+
+
+                    // ================================================================
+                    // পার্ট ৩: সবকিছু সফল হলে পেজ পরিবর্তন করা
+                    // ================================================================
+                    
+                    alert("ধন্যবাদ! আপনার অর্ডারটি সফলভাবে সম্পন্ন হয়েছে। খুব শীঘ্রই আমাদের প্রতিনিধি আপনার সাথে যোগাযোগ করবে।");
+                    
+                    // অর্ডার শেষে হোম পেজের বদলে ড্যাশবোর্ডে পাঠিয়ে দেওয়া
+                    window.location.href = "dashboard.html"; 
+
+                } catch (error) {
+                    
+                    // যদি নেটওয়ার্ক বা ডেটাবেসের কোনো টেকনিক্যাল সমস্যা হয়
+                    alert("দুঃখিত, সার্ভারে সমস্যা হচ্ছে। দয়া করে আবার চেষ্টা করুন।");
                     orderBtn.innerHTML = "[Place Order] - অর্ডার সম্পন্ন করুন";
                     orderBtn.disabled = false;
-                });
+                }
             }
-            }
-        );
+        });
 
     </script>
 </body>
