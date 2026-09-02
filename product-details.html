@@ -342,12 +342,37 @@
         let isUserLoggedIn = false;
         
 
-        // লগইন চেক করার লজিক
+
+
+
+        // ইউজার লগইন করা আছে কিনা চেক করা  // ইউজার লগইন করা আছে কিনা চেক করা // ইউজার লগইন করা আছে কিনা চেক করা
+
+        // লগইন চেক এবং প্রোফাইল বাটনের কালার লজিক
         onAuthStateChanged(auth, (user) => {
-          isUserLoggedIn = !!user; // লগইন থাকলে true হবে
+            isUserLoggedIn = !!user; // লগইন থাকলে true হবে
+            const profileBtn = document.getElementById('profile-btn');
+            if (user) {
+                if(profileBtn) profileBtn.classList.add('text-success', 'fw-bold'); // লগইন থাকলে আইকন সবুজ হবে
+            } else {
+                if(profileBtn) profileBtn.classList.remove('text-success', 'fw-bold');
+            }
+        });
+
+        // প্রোফাইল আইকনে ক্লিক করার লজিক
+        document.getElementById('profile-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (isUserLoggedIn) {
+                window.location.href = "dashboard.html"; // লগইন করা থাকলে সোজা ড্যাশবোর্ডে যাবে
+            } else {
+                var authModal = new bootstrap.Modal(document.getElementById('authModal'));
+                authModal.show(); // লগইন না থাকলে পপ-আপ আসবে
+            }
         });
 
         //===================//===========//===================//
+
+
+
 
 
         const productsDB = {
