@@ -64,7 +64,7 @@
         <!-- লগইন ফর্ম -->
         <div class="auth-card" id="login-box">
             <h3 class="auth-title">লগইন করুন</h3>
-            <form id="login-form">
+            <form id="login-form" onsubmit="return false;">
                 <div class="mb-3">
                     <label class="form-label">ইমেইল অ্যাড্রেস</label>
                     <input type="email" id="login-email" class="form-control" placeholder="example@email.com" required>
@@ -81,7 +81,7 @@
         <!-- রেজিস্টার ফর্ম (ডিফল্টভাবে লুকানো থাকবে) -->
         <div class="auth-card" id="register-box" style="display: none;">
             <h3 class="auth-title">নতুন অ্যাকাউন্ট তৈরি করুন</h3>
-            <form id="register-form">
+            <form id="register-form" onsubmit="return false;">
                 <div class="mb-3">
                     <label class="form-label">আপনার নাম</label>
                     <input type="text" id="reg-name" class="form-control" placeholder="আপনার নাম লিখুন" required>
@@ -155,7 +155,7 @@
                     // নাম সেভ করা
                     updateProfile(userCredential.user, { displayName: name }).then(() => {
                         alert("অভিনন্দন! আপনার অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে।");
-                        window.location.href = "index.html"; // লগইন শেষে হোম পেজে নিয়ে যাবে
+                        window.location.href = "dashboard.html"; // লগইন শেষে হোম পেজে নিয়ে যাবে
                     });
                 })
                 .catch((error) => {
@@ -176,7 +176,7 @@
             signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     alert("সফলভাবে লগইন হয়েছে!");
-                    window.location.href = "index.html"; // লগইন শেষে হোম পেজে নিয়ে যাবে
+                    window.location.href = "dashboard.html"; // লগইন শেষে হোম পেজে নিয়ে যাবে
                 })
                 .catch((error) => {
                     alert("ইমেইল অথবা পাসওয়ার্ড ভুল হয়েছে!");
