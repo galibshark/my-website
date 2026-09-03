@@ -237,12 +237,14 @@
 
 
                     <!-- প্রোডাক্টের ছোট ছবি (রিভিউয়ের মতো) -->
+                    
                     <div class="text-center mb-3">
                         <img id="summary-img" src="" alt="Product" class="shadow-sm border" style="width: 90px; height: 90px; object-fit: cover; border-radius: 8px; display: none; margin: 0 auto;">
                     </div>
 
 
-                    
+
+
 
                     <div class="d-flex justify-content-between mb-2">
                         <span id="summary-name" class="fw-bold text-muted">প্রোডাক্ট লোড হচ্ছে...</span>
@@ -343,33 +345,57 @@
         const productId = urlParams.get('id');
         const qty = parseInt(urlParams.get('qty')) || 1;
 
-        let selectedProduct = null;
-        let totalPrice = 0;
+        
+        
+        
+        
+        // =========================================================
+        // ৩. Local Storage থেকে ডেটা নিয়ে অর্ডার সামারি তৈরি করা
+        // =========================================================
+        let shoppingCart = JSON.parse(localStorage.getItem('keshtaru_cart')) || [];
 
-        if (productId && productsDB[productId]) {
-            selectedProduct = productsDB[productId];
-            totalPrice = selectedProduct.price * qty;
-
-            // ছবি দেখানো
-            const summaryImg = document.getElementById('summary-img');
-            if(summaryImg && selectedProduct.image) {
-                summaryImg.src = selectedProduct.image;
-                summaryImg.style.display = "block";
-            }
-
-            document.getElementById('summary-name').textContent = selectedProduct.name;
-            document.getElementById('summary-qty').textContent = `x ${qty}`;
-            
-            // নাম্বার বাংলায় কনভার্ট করা
-            const banglaPrice = selectedProduct.price.toString().replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[d]);
-            const banglaTotal = totalPrice.toString().replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[d]);
-            
-            document.getElementById('summary-price').textContent = `৳ ${banglaPrice}`;
-            document.getElementById('total-price').textContent = `৳ ${banglaTotal}`;
-        } else {
-            alert("কোনো প্রোডাক্ট সিলেক্ট করা হয়নি!");
+        // যদি কেউ কার্ট ফাঁকা রেখে চেকআউটে চলে আসে
+        if (shoppingCart.length === 0) {
+            alert("আপনার কার্টে কোনো প্রোডাক্ট নেই!");
             window.location.href = "index.html";
         }
+
+        let totalOrderPrice = 0;
+        let productNamesArray = [];
+        const imgContainer = document.getElementById('checkout-img-container');
+        imgContainer.innerHTML = ''; // আগের ফাঁকা ছবি ক্লিয়ার করে দিলাম
+
+        function convertToBanglaNumber(num) {
+            return num.toString().replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[d]);
+        }
+
+        shoppingCart.forEach(item => {
+            let itemTotal = item.price * item.qty;
+            totalOrderPrice += itemTotal;
+            
+            // প্রোডাক্টের নাম ও পরিমাণ ফায়ারবেসের জন্য সেভ রাখা
+            productNamesArray.push(`${item.name} (Qty: ${item.qty})`);
+
+            // পাশাপাশি স্লাইড হওয়ার জন্য ছবি তৈরি (flex-shrink-0 ব্যবহার করা হয়েছে যেন ছবি চ্যাপ্টা না হয়)
+            let imgHTML = `<img src="${item.image}" alt="${item.name}" class="shadow-sm border flex-shrink-0" style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px;">`;
+            imgContainer.innerHTML += imgHTML;
+        });
+
+        // সামারি বক্সে ডেটা বসানো
+        // একাধিক প্রোডাক্ট থাকলে নামগুলো লাইন বাই লাইন দেখাবে
+        document.getElementById('summary-name').innerHTML = productNamesArray.join('<br><span class="text-muted" style="font-size: 0.85rem;">+</span><br>');
+        
+        // মোট কত পিস আইটেম সেটা ডানপাশে দেখাবে
+        let totalItems = shoppingCart.reduce((sum, item) => sum + item.qty, 0);
+        document.getElementById('summary-qty').textContent = `মোট: ${convertToBanglaNumber(totalItems)} টি`;
+        
+        const banglaTotal = convertToBanglaNumber(totalOrderPrice);
+        document.getElementById('summary-price').textContent = `৳ ${banglaTotal}`;
+        document.getElementById('total-price').textContent = `৳ ${banglaTotal}`;
+
+
+
+
 
         // =========================================================
         // ৪. জিপিএস লোকেশন লজিক
@@ -442,9 +468,9 @@
                         customerPhone: phone,
                         userEmail: finalEmail,
                         address: address,
-                        productName: selectedProduct.name,
-                        qty: qty,
-                        totalPrice: totalPrice,
+                        productName: productNamesArray.join(', '), // সব প্রোডাক্টের নাম একসাথে যাবে
+                        qty: totalItems, // মোট আইটেম সংখ্যা
+                        totalPrice: totalOrderPrice,
                         status: "Pending",
                         orderDate: new Date().toLocaleString('en-US', { timeZone: 'Asia/Dhaka' }),
                         timestamp: serverTimestamp()
@@ -452,14 +478,11 @@
 
                     // গুগল শিটে পাঠানো
                     let orderData = {
-                        name: name, 
-                        phone: phone,
-                        email: email, 
-                        address: address,
+                        name: name, phone: phone, email: email, address: address,
                         mapLink: mapLink, 
-                        productName: selectedProduct.name,
-                        productUrl: productFullUrl, 
-                        qty: qty, totalPrice: totalPrice
+                        productName: productNamesArray.join(', '),
+                        productUrl: "Cart Order", 
+                        qty: totalItems, totalPrice: totalOrderPrice
                     };
 
                     const scriptURL = 'https://script.google.com/macros/s/AKfycbwQKtWN59oVGvANiWCi3ExAGYUfU83aRxsRXh5wlBC6IlJ5jNWhXiNWuoQwmM3LNblkcA/exec';
@@ -469,6 +492,7 @@
                     });
 
                     alert("ধন্যবাদ! আপনার অর্ডারটি সফলভাবে সম্পন্ন হয়েছে।");
+                    localStorage.removeItem('keshtaru_cart');
                     window.location.href = "dashboard.html";
 
                 } catch (error) {
