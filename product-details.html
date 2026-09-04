@@ -15,7 +15,7 @@
         .brand-logo { height: 65px; object-fit: contain; }
         
         .product-img-main { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 8px; }
-        .related-product-img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; background-color: #fff; padding: 10px; }
+        .related-product-img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; background-color: #fff; }
         
         .product-card { transition: 0.3s; overflow: hidden; }
         .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); }
@@ -153,6 +153,21 @@
         .cart-item-delete:hover { transform: scale(1.2); color: #a71d2a; }
 
 
+        /* =========================================
+           Scrollable Suggestion Section
+        ========================================= */
+        .suggestion-scroll-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 20px;
+            padding-bottom: 20px;
+            scroll-behavior: smooth;
+        }
+        .suggestion-scroll-container::-webkit-scrollbar { height: 8px; }
+        .suggestion-scroll-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        .suggestion-scroll-container::-webkit-scrollbar-thumb { background: #2c4c3b; border-radius: 4px; }
+
+
     </style>
               
              
@@ -168,7 +183,7 @@
     <div class="container-fluid px-3 px-md-4">
         
         <!-- Logo -->
-        <a class="navbar-brand p-0" href="index.html" style="margin-left: 5px;">
+        <a class="navbar-brand p-0" href="index.html" style="margin-left: 60px;">
             <img src="image/logo.png" alt="Keshtaru Logo" class="brand-logo rounded-circle p-1" 
                  style="width: 90px; height: 90px; object-fit: cover;">
         </a>
@@ -265,6 +280,7 @@
 
 
 
+                <!-- এই বাটনটা থাকবে -->
                 <div class="d-flex gap-2">
                     <button id="add-to-cart-btn" class="btn btn-outline-success btn-lg w-50 fw-bold shadow-sm py-3" style="border-width: 2px;">
                         <i class="bi bi-cart-plus fs-5"></i> কার্টে রাখুন
@@ -273,14 +289,21 @@
                         অর্ডার করুন
                     </a>
                 </div>
-        </div>
-    </div>
+
+            </div> <!-- ডান দিকের কলাম শেষ -->
+        </div> <!-- Row শেষ -->
+    </div> <!-- মেইন কন্টেইনার শেষ -->
+
+    
 
 
-    <!-- Dynamic "You Can Also Buy" Section -->
+    
+
+   <!-- Dynamic "You Can Also Buy" Section -->
     <div class="bg-light py-5">
         <div class="container">
             <h4 class="fw-bold mb-4 text-center border-bottom pb-3" style="color: #2c4c3b;">You can also buy (আরও দেখতে পারেন)</h4>
+            <!-- এই লাইনটি আগের মতো গ্রিড করে দেওয়া হলো -->
             <div class="row justify-content-center g-4" id="suggestion-container">
                 <!-- Data will be loaded here dynamically -->
             </div>
@@ -820,12 +843,14 @@
             // যে প্রোডাক্টটি দেখছি সেটি বাদে বাকিগুলো ফিল্টার করা
             allKeys = allKeys.filter(key => key !== productId);
 
-            // র‍্যান্ডমলি ৪টি প্রোডাক্ট বেছে নেওয়া
+            // সবগুলো প্রোডাক্ট দেখাবো, তাই লিমিট সরিয়ে দিলাম
             allKeys.sort(() => 0.5 - Math.random());
-            let selectedKeys = allKeys.slice(0, 4);
+            let selectedKeys = allKeys; 
 
             selectedKeys.forEach(key => {
                 let p = productsDB[key];
+                
+                // ডানে-বামে স্ক্রল বাদ দিয়ে হোম পেজের মতো গ্রিড (কলাম) করা হলো
                 let cardHTML = `
                 <div class="col-6 col-md-4 col-lg-3">
                     <div class="card product-card h-100 shadow-sm border-0 bg-white">
